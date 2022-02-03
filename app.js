@@ -22,7 +22,7 @@ const authRouter = require('./routes/auth');
 // const { verifyToken , verifyTokenAndAuthorization} =require('./services/verifyToken');
 app.use('/auth',authRouter);
 app.use('/post',require('./routes/postRouter'));
-
+app.use('/chat',require('./routes/chatRouter'));
 // 404 
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
