@@ -19,13 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 
 
 const authRouter = require('./routes/auth');
-const { verifyToken , verifyTokenAndAuthorization} =require('./routes/verifyToken');
+// const { verifyToken , verifyTokenAndAuthorization} =require('./services/verifyToken');
 app.use('/auth',authRouter);
-app.use('/test',verifyTokenAndAuthorization,(req,res)=>{
-    res.send("test success") 
-});
-
-
+app.use('/post',require('./routes/postRouter'));
 
 // 404 
 app.use((req, res, next) => {
