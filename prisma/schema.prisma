@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user{
+  id Int @id @default(autoincrement()) 
+  userId String @unique @db.VarChar(30) 
+  password String
+  created_at DateTime @default(now())
+  post post[]
+  message message[]
+  userEnroll userEnroll[]
+}
+
+model post {
+  id         Int      @id @default(autoincrement())
+  title      String
+  post       String   @db.VarChar(500)
+  created_at DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user_id    Int
+  userEnroll userEnroll[]
+  chat chat[]
+  owner       user     @relation(fields: [user_id], references: [id])
+  @@index([user_id], map: "post_user_id_fkey")
+}
+
+model userEnroll{
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  post_id    Int
+  user user @relation(fields: [user_id], references: [id])
+  post post @relation(fields: [post_id], references: [id])
+}
+
+model chat{
+  id Int @id @default(autoincrement())
+  post_id Int
+  message message[]
+  post post @relation(fields: [post_id], references: [id])
+}
+
+model message{
+  id Int @id @default(autoincrement())
+  text String
+  created_at DateTime @default(now())
+  chat_id Int
+  user_id Int
+  user user @relation(fields: [user_id], references: [id])
+  chat chat @relation(fields: [chat_id],references: [id])
+}
