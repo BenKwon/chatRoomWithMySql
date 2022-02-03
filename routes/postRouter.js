@@ -24,5 +24,14 @@ router.post('/',verifyTokenAndAuthorization,async (req,res)=>{
     }
 });
 
-
+//enroll user into post 
+router.post('/enroll',verifyTokenAndAuthorization, async(req,res)=>{
+    try{
+        const result = await postService.enrollUser(req.body);
+        res.json(result);
+    }catch(err){
+        console.error(err);
+        res.status(501).json(err);
+    }
+});
 module.exports = router;

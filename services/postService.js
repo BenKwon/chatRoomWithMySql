@@ -56,8 +56,31 @@ const uploadPost = async function(reqBody){
             post_id: newPost.id
         }
     });
-    
+
     return newPost;
 }
+
+//enroll user into post
+const enrollUser = async function(body){
+    const {user_id, post_id} = body;
+    
+    const user = await prisma.user.findFirst({
+        where:{
+            userId:user_id
+        },
+        select:{
+            id: true
+        }
+    });
+
+    const enroll = await prisma.userEnroll.create({
+        data:{
+            user_id:user.id,
+            post_id
+        }
+    })
+    console.log(enroll)
+    return enroll;
+}
 module.exports = { getAllPostsById,
-                    uploadPost }
+                    uploadPost, enrollUser }

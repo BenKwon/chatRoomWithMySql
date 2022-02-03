@@ -41,6 +41,7 @@ router.post("/login", async (req, res) => {
 				userId: req.body.userId
 			},
 			select: {
+				id:true,
 				userId:true,
 				password:true
 			}
@@ -61,8 +62,8 @@ router.post("/login", async (req, res) => {
 		} else {
 			const accessToken = jwt.sign(
 				{
-					id: user._id,
-					isAdmin: user.isAdmin,
+					id: user.id,
+					user_id: user.userId
 				},
 				process.env.JWT_SEC,
 				{ expiresIn: "3d" }
