@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GIF 채팅방</title>
+</head>
+<body>
+<div>Login</div>
+<form action="/auth/login" method="post">
+    <label for="user-id">id</label>
+    <input type="text" id="user-id" name="userId" placeholder="아이디">
+    <label for="password">password</label>
+    <input type="password" id="password" name="password" placeholder="패스워드">
+    <button id="loginSubmit">로그인</button>
+</form>
+<ul id='chat-list'>
+</ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io.connect('http://localhost:3001', {
+    path: '/socket.io',
+    transports: ['websocket'],
+  });
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('reply', 'Hello Node.JS');
+  });
+  document.getElementById('loginSubmit').addEventListener('click', async ()=>{
+    try{
+        const result = await axios({
+            method: 'post',
+            url: '/auth/login',
+            data: {
+                userId: document.getElementById('user-id').value,
+                password : document.getElementById('password').value
+            },
+        });
+        console.log(result.data);
+        var item = document.createElement('li');
+        item.textContent = result.data.accessToken;
+        document.getElementById('chat-list').appendChild(item);
+        localStorage.setItem('token',result.data.accessToken);
+    }catch(err){
+        alert(err);
+    }
+  });
+</script>
+</body>
+</html>

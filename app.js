@@ -3,7 +3,6 @@ const path = require("path");
 const morgan = require("morgan");
 // const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
-
 dotenv.config();
 const app = express();
 app.use(morgan('dev'));
@@ -17,6 +16,14 @@ app.set("view engine", "html");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+app.get('/',(req,res)=>{
+    res.sendFile(path.join(__dirname,'public/index.html'));
+});
+app.get('/chat',(req,res)=>{
+    res.sendFile(path.join(__dirname,'public/chat.html'));
+}
+)
 
 const authRouter = require('./routes/auth');
 // const { verifyToken , verifyTokenAndAuthorization} =require('./services/verifyToken');
@@ -39,6 +46,10 @@ app.use((err, req, res, next) => {
     res.send("error")
 });
 
-app.listen(app.get('port'),()=>{
+const server = app.listen(app.get('port'),()=>{
     console.log('listening on port ' + app.get('port'));
 })
+
+//web socket server on
+const webSocket = require('./socket');
+webSocket(server)
